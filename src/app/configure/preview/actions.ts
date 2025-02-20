@@ -16,14 +16,31 @@ export const createCheckoutSession = async ({
   })
 
   if (!configuration) {
-    throw new Error('No such configuration found')
+    throw new Error('❌ No such configuration found')
   }
 
   const { getUser } = getKindeServerSession()
   const user = await getUser()
 
   if (!user) {
-    throw new Error('You need to be logged in')
+    throw new Error('❌ You need to be logged in')
+  }
+
+  console.log('🔍 User ID from session:', user.id)
+
+  // ✅ Ensure the user exists in the database
+  let dbUser = await db.user.findUnique({
+    where: { id: user.id },
+  })
+
+  if (!dbUser) {
+    console.log('⚠️ User not found in DB, creating new user...')
+    dbUser = await db.user.create({
+      data: {
+        id: user.id, // Ensure user.id is in the correct format
+        email: user.email || '', // Fallback to empty string
+      },
+    })
   }
 
   const { finish, material } = configuration
@@ -35,14 +52,13 @@ export const createCheckoutSession = async ({
 
   let order: Order | undefined = undefined
 
+  // ✅ Ensure existing order is checked
   const existingOrder = await db.order.findFirst({
     where: {
-      userId: user.id,
+      userId: dbUser.id,
       configurationId: configuration.id,
     },
   })
-
-  console.log(user.id, configuration.id)
 
   if (existingOrder) {
     order = existingOrder
@@ -50,7 +66,7 @@ export const createCheckoutSession = async ({
     order = await db.order.create({
       data: {
         amount: price / 100,
-        userId: user.id,
+        userId: dbUser.id, // ✅ Ensure userId references an existing user
         configurationId: configuration.id,
       },
     })
@@ -60,7 +76,7 @@ export const createCheckoutSession = async ({
     name: 'Custom iPhone Case',
     images: [configuration.imageUrl],
     default_price_data: {
-      currency: 'USD',
+      currency: 'INR',
       unit_amount: price,
     },
   })
@@ -72,7 +88,7 @@ export const createCheckoutSession = async ({
     mode: 'payment',
     shipping_address_collection: { allowed_countries: ['DE', 'US'] },
     metadata: {
-      userId: user.id,
+      userId: dbUser.id,
       orderId: order.id,
     },
     line_items: [{ price: product.default_price as string, quantity: 1 }],

@@ -7,16 +7,17 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const formatPrice = (price: number) => {
-  const formatter = new Intl.NumberFormat('en-US', {
+  const formatter = new Intl.NumberFormat('en-IN', {
     style: 'currency',
-    currency: 'USD',
-  })
+    currency: 'INR',
+  });
 
-  return formatter.format(price)
-}
+  return formatter.format(price);
+};
+
 
 export function constructMetadata({
-  title = 'CaseCobra - custom high-quality phone cases',
+  title = 'CaseCrafters - custom high-quality phone cases',
   description = 'Create custom high-quality phone cases in seconds',
   image = '/thumbnail.png',
   icons = '/favicon.ico',
