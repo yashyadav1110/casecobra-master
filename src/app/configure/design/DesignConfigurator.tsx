@@ -85,7 +85,7 @@ const DesignConfigurator = ({
 
   const phoneCaseRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-
+  
   const { startUpload } = useUploadThing('imageUploader')
 
   async function saveConfiguration() {

@@ -12,7 +12,7 @@
   "dependencies": {
     "@headlessui/react": "^1.7.19",
     "@kinde-oss/kinde-auth-nextjs": "^2.5.0",
-    "@prisma/client": "^6.3.1",
+    "@prisma/client": "^6.4.1",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -52,7 +52,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.2",
     "postcss": "^8",
-    "prisma": "^6.3.1",
+    "prisma": "^6.4.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.4.5"
   }

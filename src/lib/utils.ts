@@ -14,8 +14,6 @@ export const formatPrice = (price: number) => {
 
   return formatter.format(price);
 };
-
-
 export function constructMetadata({
   title = 'CaseCrafters - custom high-quality phone cases',
   description = 'Create custom high-quality phone cases in seconds',

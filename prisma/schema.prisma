@@ -104,3 +104,11 @@ model BillingAddress {
   phoneNumber String?
   orders      Order[]
 }
+
+model Webhook {
+  id        String  @id @default(cuid())
+  eventType String
+  url       String
+  secret    String
+  createdAt DateTime @default(now())
+}

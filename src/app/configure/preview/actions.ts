@@ -50,6 +50,13 @@ export const createCheckoutSession = async ({
   if (material === 'polycarbonate')
     price += PRODUCT_PRICES.material.polycarbonate
 
+  // 🛑 FIX: Ensure minimum price is ₹50 (5000 paise)
+  if (price < 5000) {
+    price = 5000
+  }
+
+  const priceInPaise = price // Convert to paise
+
   let order: Order | undefined = undefined
 
   // ✅ Ensure existing order is checked
@@ -65,33 +72,33 @@ export const createCheckoutSession = async ({
   } else {
     order = await db.order.create({
       data: {
-        amount: price / 100,
+        amount: priceInPaise,
         userId: dbUser.id, // ✅ Ensure userId references an existing user
         configurationId: configuration.id,
       },
     })
   }
 
-  const product = await stripe.products.create({
-    name: 'Custom iPhone Case',
-    images: [configuration.imageUrl],
-    default_price_data: {
-      currency: 'INR',
-      unit_amount: price,
-    },
-  })
-
   const stripeSession = await stripe.checkout.sessions.create({
     success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/thank-you?orderId=${order.id}`,
     cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/configure/preview?id=${configuration.id}`,
-    payment_method_types: ['card', 'paypal'],
+    payment_method_types: ['card'],
     mode: 'payment',
     shipping_address_collection: { allowed_countries: ['DE', 'US'] },
     metadata: {
       userId: dbUser.id,
       orderId: order.id,
     },
-    line_items: [{ price: product.default_price as string, quantity: 1 }],
+    line_items: [
+      {
+        price_data: {
+          currency: 'inr',
+          product_data: { name: 'Custom iPhone Case' },
+          unit_amount: priceInPaise, // 🛑 FIX: Amount must be in paise
+        },
+        quantity: 1,
+      },
+    ],
   })
 
   return { url: stripeSession.url }
