@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 import PhonePreview from '@/components/PhonePreview'
 import { formatPrice } from '@/lib/utils'
+import { log } from 'console'
 
 const ThankYou = () => {
   const searchParams = useSearchParams()
@@ -41,7 +42,8 @@ const ThankYou = () => {
       </div>
     )
   }
-
+  console.log(data);
+  
   const { configuration, billingAddress, shippingAddress, amount } = data
   const { color } = configuration
 

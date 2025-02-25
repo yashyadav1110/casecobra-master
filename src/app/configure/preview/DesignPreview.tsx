@@ -39,6 +39,12 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     totalPrice += PRODUCT_PRICES.material.polycarbonate
   if (finish === 'textured') totalPrice += PRODUCT_PRICES.finish.textured
 
+  
+  if (material === 'silicone')
+    totalPrice += PRODUCT_PRICES.material.silicone
+  if (finish === 'smooth') totalPrice += PRODUCT_PRICES.finish.smooth
+
+
   const { mutate: createPaymentSession } = useMutation({
     mutationKey: ['get-checkout-session'],
     mutationFn: createCheckoutSession,
@@ -136,11 +142,29 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
                   </div>
                 ) : null}
 
+                {finish === 'smooth' ? (
+                  <div className='flex items-center justify-between py-1 mt-2'>
+                    <p className='text-gray-600'>Smooth finish</p>
+                    <p className='font-medium text-gray-900'>
+                      {formatPrice(PRODUCT_PRICES.finish.smooth / 100)}
+                    </p>
+                  </div>
+                ) : null}   
+
                 {material === 'polycarbonate' ? (
                   <div className='flex items-center justify-between py-1 mt-2'>
                     <p className='text-gray-600'>Soft polycarbonate material</p>
                     <p className='font-medium text-gray-900'>
                       {formatPrice(PRODUCT_PRICES.material.polycarbonate / 100)}
+                    </p>
+                  </div>
+                ) : null}
+
+                {material === 'silicone' ? (
+                  <div className='flex items-center justify-between py-1 mt-2'>
+                    <p className='text-gray-600'>Silicone material</p>
+                    <p className='font-medium text-gray-900'>
+                      {formatPrice(PRODUCT_PRICES.material.silicone / 100)}
                     </p>
                   </div>
                 ) : null}
