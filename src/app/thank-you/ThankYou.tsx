@@ -130,17 +130,17 @@ const ThankYou = () => {
         </div>
 
         <div className='space-y-6 border-t border-zinc-200 pt-10 text-sm'>
-          <div className='flex justify-between'>
+          {/* <div className='flex justify-between'>
             <p className='font-medium text-zinc-900'>Subtotal</p>
-            <p className='text-zinc-700'>{formatPrice(amount)}</p>
+            <p className='text-zinc-700'>{formatPrice(amount/100)}</p>
           </div>
           <div className='flex justify-between'>
             <p className='font-medium text-zinc-900'>Shipping</p>
             <p className='text-zinc-700'>{formatPrice(0)}</p>
-          </div>
+          </div> */}
           <div className='flex justify-between'>
             <p className='font-medium text-zinc-900'>Total</p>
-            <p className='text-zinc-700'>{formatPrice(amount)}</p>
+            <p className='text-zinc-700'>{formatPrice(amount/100)}</p>
           </div>
         </div>
       </div>

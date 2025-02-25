@@ -50,10 +50,15 @@ export const createCheckoutSession = async ({
   if (material === 'polycarbonate')
     price += PRODUCT_PRICES.material.polycarbonate
 
+  if (material === 'silicone')
+    price += PRODUCT_PRICES.material.silicone
+  if (finish === 'smooth') price += PRODUCT_PRICES.finish.smooth
+
+
   // 🛑 FIX: Ensure minimum price is ₹50 (5000 paise)
-  if (price < 5000) {
-    price = 5000
-  }
+  // if (price < 5000) {
+  //   price = 5000
+  // }
 
   const priceInPaise = price // Convert to paise
 
