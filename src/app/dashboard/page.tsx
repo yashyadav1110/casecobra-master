@@ -71,7 +71,7 @@ const Page = async () => {
     },
   })
 
-  const WEEKLY_GOAL = 500
+  const WEEKLY_GOAL = 5000
   const MONTHLY_GOAL = 2500
 
   return (
@@ -83,7 +83,7 @@ const Page = async () => {
               <CardHeader className='pb-2'>
                 <CardDescription>Last Week</CardDescription>
                 <CardTitle className='text-4xl'>
-                  {formatPrice(lastWeekSum._sum.amount ?? 0)}
+                  {formatPrice(lastWeekSum._sum.amount? lastWeekSum._sum.amount/100:0)}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -93,7 +93,7 @@ const Page = async () => {
               </CardContent>
               <CardFooter>
                 <Progress
-                  value={((lastWeekSum._sum.amount ?? 0) * 100) / WEEKLY_GOAL}
+                  value={((lastWeekSum._sum.amount ?? 0)) / WEEKLY_GOAL}
                 />
               </CardFooter>
             </Card>
@@ -101,7 +101,7 @@ const Page = async () => {
               <CardHeader className='pb-2'>
                 <CardDescription>Last Month</CardDescription>
                 <CardTitle className='text-4xl'>
-                  {formatPrice(lastMonthSum._sum.amount ?? 0)}
+                  {formatPrice(lastMonthSum._sum.amount? lastMonthSum._sum.amount/100:0)}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -111,7 +111,7 @@ const Page = async () => {
               </CardContent>
               <CardFooter>
                 <Progress
-                  value={((lastMonthSum._sum.amount ?? 0) * 100) / MONTHLY_GOAL}
+                  value={((lastMonthSum._sum.amount ?? 0)) / MONTHLY_GOAL}
                 />
               </CardFooter>
             </Card>
@@ -149,7 +149,7 @@ const Page = async () => {
                     {order.createdAt.toLocaleDateString()}
                   </TableCell>
                   <TableCell className='text-right'>
-                    {formatPrice(order.amount)}
+                    {formatPrice(order.amount/100)}
                   </TableCell>
                 </TableRow>
               ))}
