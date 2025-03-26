@@ -17,7 +17,7 @@ export const formatPrice = (price: number) => {
 export function constructMetadata({
   title = 'CaseCrafters - custom high-quality phone cases',
   description = 'Create custom high-quality phone cases in seconds',
-  image = '/thumbnail.png',
+  image = 'C:/CopyCasecrafters/casecrafters/public/logo.png',
   // icons = '/favicon.ico',
 }: {
   title?: string
