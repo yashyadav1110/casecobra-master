@@ -16,7 +16,7 @@ export default function Home() {
               <div className='absolute w-28 left-0 -top-20 hidden lg:block'>
                 {/* i forgot this div right here in the video, it's purely visual gradient and looks nice */}
                 <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t via-slate-50/50 from-slate-50 h-28' />
-                
+                {/* <img src='/snake-1.png' className='w-full' /> */}
               </div>
               <h1 className='relative w-fit tracking-tight text-balance mt-16 font-bold !leading-tight text-gray-900 text-5xl md:text-6xl lg:text-7xl'>
                 Your Image on a{' '}
@@ -121,7 +121,7 @@ export default function Home() {
               </span>{' '}
               say
             </h2>
-            
+            {/* <img src='/snake-2.png' className='w-24 order-0 lg:order-2' /> */}
           </div>
 
           <div className='mx-auto grid max-w-2xl grid-cols-1 px-4 lg:mx-0 lg:max-w-none lg:grid-cols-2 gap-y-16'>

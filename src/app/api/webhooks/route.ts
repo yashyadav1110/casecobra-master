@@ -9,6 +9,8 @@ import OrderReceivedEmail from '@/components/emails/OrderReceivedEmail'
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(req: Request) {
+  console.log('Webhook received');
+  
   try {
     const body = await req.text()
     const signature = headers().get('stripe-signature')
@@ -29,6 +31,8 @@ export async function POST(req: Request) {
       }
 
       const session = event.data.object as Stripe.Checkout.Session
+      console.log('Session:', session);
+      
 
       const { userId, orderId } = session.metadata || {
         userId: null,
@@ -41,6 +45,10 @@ export async function POST(req: Request) {
 
       const billingAddress = session.customer_details!.address
       const shippingAddress = session.shipping_details!.address
+
+      console.log('Billing address:', billingAddress);
+      console.log('Shipping address:', shippingAddress);
+      
 
       const updatedOrder = await db.order.update({
         where: {
@@ -74,7 +82,7 @@ export async function POST(req: Request) {
       
 
       await resend.emails.send({
-        from: 'casecrafters <hello@casecrafters.com>',
+        from: 'casecrafters <yashdy8900@gmail.com>',
         to: [event.data.object.customer_details.email],
         subject: 'Thanks for your order!',
         react: OrderReceivedEmail({
