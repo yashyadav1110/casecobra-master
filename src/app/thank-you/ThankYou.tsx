@@ -3,14 +3,17 @@
 import { useQuery } from '@tanstack/react-query'
 import { getPaymentStatus } from './actions'
 import { useSearchParams } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import { Download, Loader2 } from 'lucide-react'
 import PhonePreview from '@/components/PhonePreview'
 import { formatPrice } from '@/lib/utils'
-import { log } from 'console'
+import { useRef, useState } from 'react'
+import { generatePDF } from './utils/pdfGenerator'
 
 const ThankYou = () => {
   const searchParams = useSearchParams()
   const orderId = searchParams.get('orderId') || ''
+  const receiptRef = useRef<HTMLDivElement>(null)
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false)
 
   const { data } = useQuery({
     queryKey: ['get-payment-status'],
@@ -19,37 +22,60 @@ const ThankYou = () => {
     retryDelay: 500,
   })
 
-  if (data === undefined) {
-    return (
-      <div className='w-full mt-24 flex justify-center'>
-        <div className='flex flex-col items-center gap-2'>
-          <Loader2 className='h-8 w-8 animate-spin text-zinc-500' />
-          <h3 className='font-semibold text-xl'>Loading your order...</h3>
-          <p>This won't take long.</p>
-        </div>
-      </div>
-    )
+  const handleDownloadPDF = async () => {
+    if (!receiptRef.current) return
+    
+    setIsGeneratingPDF(true)
+    
+    try {
+      await generatePDF(receiptRef.current, orderId);
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('There was an issue generating your receipt. Please try again later.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   }
 
-  if (data === false) {
+  if (data === undefined || data === false) {
     return (
       <div className='w-full mt-24 flex justify-center'>
         <div className='flex flex-col items-center gap-2'>
           <Loader2 className='h-8 w-8 animate-spin text-zinc-500' />
-          <h3 className='font-semibold text-xl'>Verifying your payment...</h3>
-          <p>This might take a moment.</p>
+          <h3 className='font-semibold text-xl'>
+            {data === undefined ? 'Loading your order...' : 'Verifying your payment...'}
+          </h3>
+          <p>{data === undefined ? "This won't take long." : 'This might take a moment.'}</p>
         </div>
       </div>
     )
   }
-  console.log(data);
   
   const { configuration, billingAddress, shippingAddress, amount } = data
   const { color } = configuration
 
   return (
-    <div className='bg-white'>
-      <div className='mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8'>
+    <div className='bg-white relative'>
+      <button
+        onClick={handleDownloadPDF}
+        disabled={isGeneratingPDF}
+        className={`absolute top-4 right-4 flex items-center gap-2 ${
+          isGeneratingPDF ? 'bg-gray-400 cursor-wait' : 'bg-primary hover:bg-primary/90'
+        } text-white py-2 px-4 rounded-md transition-colors`}
+      >
+        {isGeneratingPDF ? (
+          <Loader2 className='h-4 w-4 animate-spin' />
+        ) : (
+          <Download className='h-4 w-4' />
+        )}
+        <span>{isGeneratingPDF ? 'Generating...' : 'Download Receipt'}</span>
+      </button>
+      
+      <div 
+        ref={receiptRef} 
+        className='mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8'
+        data-pdf-content
+      >
         <div className='max-w-xl'>
           <p className='text-base font-medium text-primary'>Thank you!</p>
           <h1 className='mt-2 text-4xl font-bold tracking-tight sm:text-5xl'>
@@ -130,14 +156,6 @@ const ThankYou = () => {
         </div>
 
         <div className='space-y-6 border-t border-zinc-200 pt-10 text-sm'>
-          {/* <div className='flex justify-between'>
-            <p className='font-medium text-zinc-900'>Subtotal</p>
-            <p className='text-zinc-700'>{formatPrice(amount/100)}</p>
-          </div>
-          <div className='flex justify-between'>
-            <p className='font-medium text-zinc-900'>Shipping</p>
-            <p className='text-zinc-700'>{formatPrice(0)}</p>
-          </div> */}
           <div className='flex justify-between'>
             <p className='font-medium text-zinc-900'>Total</p>
             <p className='text-zinc-700'>{formatPrice(amount/100)}</p>

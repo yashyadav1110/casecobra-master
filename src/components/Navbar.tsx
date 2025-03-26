@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, User } from 'lucide-react'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 
 const Navbar = async () => {
@@ -39,6 +39,15 @@ const Navbar = async () => {
                     Dashboard ✨
                   </Link>
                 ) : null}
+                <Link
+                  href='/profile'
+                  className={buttonVariants({
+                    size: 'sm',
+                    variant: 'ghost',
+                  })}>
+                  <User className="h-4 w-4 mr-2" />
+                  Profile
+                </Link>
                 <Link
                   href='/configure/upload'
                   className={buttonVariants({
